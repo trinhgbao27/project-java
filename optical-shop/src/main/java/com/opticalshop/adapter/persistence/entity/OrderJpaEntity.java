@@ -14,13 +14,13 @@ import java.util.UUID;
 public class OrderJpaEntity {
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier")
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     @Column(name = "order_code", nullable = false, unique = true)
     private String orderCode;
 
-    @Column(name = "customer_id", nullable = false, columnDefinition = "uniqueidentifier")
+    @Column(name = "customer_id", nullable = false, columnDefinition = "uuid")
     private UUID customerId;
 
     @Enumerated(EnumType.STRING)

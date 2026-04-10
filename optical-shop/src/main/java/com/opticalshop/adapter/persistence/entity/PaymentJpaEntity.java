@@ -12,10 +12,10 @@ import java.util.UUID;
 public class PaymentJpaEntity {
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier")
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "order_id", nullable = false, unique = true, columnDefinition = "uniqueidentifier")
+    @Column(name = "order_id", nullable = false, unique = true, columnDefinition = "uuid")
     private UUID orderId;
 
     @Enumerated(EnumType.STRING)

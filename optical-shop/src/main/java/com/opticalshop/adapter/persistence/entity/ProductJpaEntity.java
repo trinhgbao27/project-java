@@ -12,7 +12,7 @@ import java.util.UUID;
 public class ProductJpaEntity {
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier")
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     @Column(nullable = false)
@@ -28,7 +28,7 @@ public class ProductJpaEntity {
     @Column(name = "product_type", nullable = false)
     private ProductType productType;
 
-    @Column(columnDefinition = "NVARCHAR(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)

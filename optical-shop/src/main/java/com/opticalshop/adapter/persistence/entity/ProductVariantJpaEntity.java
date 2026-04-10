@@ -9,7 +9,7 @@ import java.util.UUID;
 public class ProductVariantJpaEntity {
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier")
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)

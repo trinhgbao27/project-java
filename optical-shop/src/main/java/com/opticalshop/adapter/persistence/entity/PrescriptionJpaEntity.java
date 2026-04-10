@@ -10,10 +10,10 @@ import java.util.UUID;
 public class PrescriptionJpaEntity {
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier")
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "customer_id", nullable = false, columnDefinition = "uniqueidentifier")
+    @Column(name = "customer_id", nullable = false, columnDefinition = "uuid")
     private UUID customerId;
 
     @Column(name = "od_sphere", precision = 5, scale = 2)

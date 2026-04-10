@@ -10,20 +10,20 @@ import java.util.UUID;
 public class OrderItemJpaEntity {
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier")
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private OrderJpaEntity order;
 
-    @Column(name = "variant_id", columnDefinition = "uniqueidentifier")
+    @Column(name = "variant_id", columnDefinition = "uuid")
     private UUID variantId;
 
-    @Column(name = "lens_id", columnDefinition = "uniqueidentifier")
+    @Column(name = "lens_id", columnDefinition = "uuid")
     private UUID lensId;
 
-    @Column(name = "prescription_id", columnDefinition = "uniqueidentifier")
+    @Column(name = "prescription_id", columnDefinition = "uuid")
     private UUID prescriptionId;
 
     @Enumerated(EnumType.STRING)
