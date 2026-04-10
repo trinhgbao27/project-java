@@ -46,11 +46,13 @@ public class SecurityConfig {
                 ).permitAll()
 
                 // Staff endpoints — cần ROLE_STAFF
-                .requestMatchers("/api/v1/staff/**").hasRole("STAFF")
+                //.requestMatchers("/api/v1/staff/**").hasRole("STAFF")
 
                 // Manager endpoints — cần ROLE_MANAGER
-                .requestMatchers("/api/v1/manager/**").hasRole("MANAGER")
-
+                //.requestMatchers("/api/v1/manager/**").hasRole("MANAGER")
+                //thay bằng
+                    .requestMatchers("/api/v1/staff/**").authenticated()
+                    .requestMatchers("/api/v1/manager/**").authenticated()
                 // Còn lại phải đăng nhập
                 .anyRequest().authenticated()
             )
