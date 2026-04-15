@@ -1,143 +1,178 @@
-# Cấu trúc thư mục BE cơ bản
+# Cấu trúc thư mục BE 
 ```
-├── optical-shop
-│   ├── src
-│   │   └── main
-│   │       ├── java
-│   │       │   └── com
-│   │       │       └── opticalshop
-│   │       │           ├── adapter
-│   │       │           │   ├── external
-│   │       │           │   │   ├── notification
-│   │       │           │   │   │   └── EmailNotificationAdapter.java
-│   │       │           │   │   ├── payment
-│   │       │           │   │   │   ├── MomoPaymentAdapter.java
-│   │       │           │   │   │   ├── PaymentGatewayRouter.java
-│   │       │           │   │   │   └── VnpayPaymentAdapter.java
-│   │       │           │   │   └── shipping
-│   │       │           │   │       └── GhnShippingAdapter.java
-│   │       │           │   ├── persistence
-│   │       │           │   │   ├── entity
-│   │       │           │   │   │   ├── OrderItemJpaEntity.java
-│   │       │           │   │   │   ├── OrderJpaEntity.java
-│   │       │           │   │   │   ├── PaymentJpaEntity.java
-│   │       │           │   │   │   ├── PrescriptionJpaEntity.java
-│   │       │           │   │   │   ├── ProductJpaEntity.java
-│   │       │           │   │   │   ├── ProductVariantJpaEntity.java
-│   │       │           │   │   │   └── UserJpaEntity.java
-│   │       │           │   │   ├── impl
-│   │       │           │   │   │   ├── OrderRepositoryImpl.java
-│   │       │           │   │   │   ├── PaymentRepositoryImpl.java
-│   │       │           │   │   │   ├── PrescriptionRepositoryImpl.java
-│   │       │           │   │   │   ├── ProductRepositoryImpl.java
-│   │       │           │   │   │   └── UserRepositoryImpl.java
-│   │       │           │   │   ├── mapper
-│   │       │           │   │   │   ├── CommonMapper.java
-│   │       │           │   │   │   ├── OrderMapper.java
-│   │       │           │   │   │   └── ProductMapper.java
-│   │       │           │   │   └── repository
-│   │       │           │   │       ├── OrderJpaRepository.java
-│   │       │           │   │       ├── PaymentJpaRepository.java
-│   │       │           │   │       ├── PrescriptionJpaRepository.java
-│   │       │           │   │       ├── ProductJpaRepository.java
-│   │       │           │   │       ├── ProductVariantJpaRepository.java
-│   │       │           │   │       └── UserJpaRepository.java
-│   │       │           │   └── web
-│   │       │           │       ├── customer
-│   │       │           │       │   ├── AccountController.java
-│   │       │           │       │   ├── OrderController.java
-│   │       │           │       │   └── ProductController.java
-│   │       │           │       ├── dto
-│   │       │           │       │   ├── request
-│   │       │           │       │   └── response
-│   │       │           │       ├── manager
-│   │       │           │       │   └── ProductManagementController.java
-│   │       │           │       ├── staff
-│   │       │           │       │   └── StaffOrderController.java
-│   │       │           │       └── GlobalExceptionHandler.java
-│   │       │           ├── application
-│   │       │           │   ├── port
-│   │       │           │   │   ├── NotificationPort.java
-│   │       │           │   │   ├── PaymentGatewayPort.java
-│   │       │           │   │   └── ShippingCarrierPort.java
-│   │       │           │   └── usecase
-│   │       │           │       ├── cart
-│   │       │           │       ├── order
-│   │       │           │       │   ├── CancelOrderCommand.java
-│   │       │           │       │   ├── CancelOrderUseCase.java
-│   │       │           │       │   ├── PlaceOrderCommand.java
-│   │       │           │       │   ├── PlaceOrderResult.java
-│   │       │           │       │   ├── PlaceOrderUseCase.java
-│   │       │           │       │   ├── TrackOrderQuery.java
-│   │       │           │       │   ├── TrackOrderResult.java
-│   │       │           │       │   └── TrackOrderUseCase.java
-│   │       │           │       ├── payment
-│   │       │           │       ├── prescription
-│   │       │           │       │   ├── CreatePrescriptionOrderCommand.java
-│   │       │           │       │   ├── CreatePrescriptionOrderResult.java
-│   │       │           │       │   └── CreatePrescriptionOrderUseCase.java
-│   │       │           │       ├── product
-│   │       │           │       │   ├── GetProductDetailQuery.java
-│   │       │           │       │   ├── GetProductDetailUseCase.java
-│   │       │           │       │   └── ProductDetailResult.java
-│   │       │           │       └── staff
-│   │       │           │           ├── ConfirmOrderUseCase.java
-│   │       │           │           └── UpdateShipmentUseCase.java
-│   │       │           ├── domain
-│   │       │           │   ├── event
-│   │       │           │   │   ├── DomainEvent.java
-│   │       │           │   │   ├── OrderPlacedEvent.java
-│   │       │           │   │   └── OrderStatusChangedEvent.java
-│   │       │           │   ├── exception
-│   │       │           │   │   ├── DomainException.java
-│   │       │           │   │   ├── InsufficientStockException.java
-│   │       │           │   │   └── OrderNotFoundException.java
-│   │       │           │   ├── model
-│   │       │           │   │   ├── cart
-│   │       │           │   │   ├── order
-│   │       │           │   │   │   ├── ItemType.java
-│   │       │           │   │   │   ├── Order.java
-│   │       │           │   │   │   ├── OrderItem.java
-│   │       │           │   │   │   ├── OrderStatus.java
-│   │       │           │   │   │   └── OrderType.java
-│   │       │           │   │   ├── payment
-│   │       │           │   │   │   ├── Payment.java
-│   │       │           │   │   │   ├── PaymentMethod.java
-│   │       │           │   │   │   └── PaymentStatus.java
-│   │       │           │   │   ├── prescription
-│   │       │           │   │   │   └── Prescription.java
-│   │       │           │   │   ├── product
-│   │       │           │   │   │   ├── CoatingType.java
-│   │       │           │   │   │   ├── LensCatalog.java
-│   │       │           │   │   │   ├── LensType.java
-│   │       │           │   │   │   ├── Product.java
-│   │       │           │   │   │   ├── ProductType.java
-│   │       │           │   │   │   └── ProductVariant.java
-│   │       │           │   │   └── user
-│   │       │           │   │       └── User.java
-│   │       │           │   ├── repository
-│   │       │           │   │   ├── OrderRepository.java
-│   │       │           │   │   ├── PaymentRepository.java
-│   │       │           │   │   ├── PrescriptionRepository.java
-│   │       │           │   │   ├── ProductRepository.java
-│   │       │           │   │   └── UserRepository.java
-│   │       │           │   └── service
-│   │       │           │       └── PricingService.java
-│   │       │           └── infrastructure
-│   │       │               ├── config
-│   │       │               │   ├── JpaConfig.java
-│   │       │               │   ├── SecurityConfig.java
-│   │       │               │   ├── SwaggerConfig.java
-│   │       │               │   └── UseCaseConfig.java
-│   │       │               ├── security
-│   │       │               │   ├── CustomUserPrincipal.java
-│   │       │               │   ├── JwtFilter.java
-│   │       │               │   └── JwtUtil.java
-│   │       │               └── OpticalShopApplication.java
-│   │       └── resources
-│   │           └── application.properties
-│   ├── docker-compose.yml
-│   └── pom.xml
+├── .mvn
+│   └── wrapper
+│       └── maven-wrapper.properties
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── com
+│   │   │       └── bankinh
+│   │   │           └── backend
+│   │   │               ├── application
+│   │   │               │   ├── dto
+│   │   │               │   │   ├── request
+│   │   │               │   │   │   ├── CapNhatTrangThaiRequest.java
+│   │   │               │   │   │   ├── DonHangChiTietRequest.java
+│   │   │               │   │   │   ├── DonHangRequest.java
+│   │   │               │   │   │   ├── DonKinhRequest.java
+│   │   │               │   │   │   ├── NguoiDungRequest.java
+│   │   │               │   │   │   ├── SanPhamRequest.java
+│   │   │               │   │   │   ├── TuChoiHoanTraRequest.java
+│   │   │               │   │   │   └── YeuCauHoanTraRequest.java
+│   │   │               │   │   └── response
+│   │   │               │   │       ├── DonHangChiTietResponse.java
+│   │   │               │   │       ├── DonHangResponse.java
+│   │   │               │   │       ├── DonKinhResponse.java
+│   │   │               │   │       ├── NguoiDungResponse.java
+│   │   │               │   │       └── SanPhamResponse.java
+│   │   │               │   ├── mapper
+│   │   │               │   │   ├── DonHangChiTietMapper.java
+│   │   │               │   │   ├── DonHangMapper.java
+│   │   │               │   │   ├── DonKinhMapper.java
+│   │   │               │   │   ├── NguoiDungMapper.java
+│   │   │               │   │   └── SanPhamMapper.java
+│   │   │               │   └── service
+│   │   │               │       ├── DonHangChiTietService.java
+│   │   │               │       ├── DonHangService.java
+│   │   │               │       ├── DonKinhService.java
+│   │   │               │       ├── NguoiDungService.java
+│   │   │               │       └── SanPhamService.java
+│   │   │               ├── common
+│   │   │               │   └── exception
+│   │   │               │       ├── GlobalExceptionHandler.java
+│   │   │               │       └── ResourceNotFoundException.java
+│   │   │               ├── domain
+│   │   │               │   ├── model
+│   │   │               │   │   ├── DonHang.java
+│   │   │               │   │   ├── DonHangChiTiet.java
+│   │   │               │   │   ├── DonKinh.java
+│   │   │               │   │   ├── LoaiSanPham.java
+│   │   │               │   │   ├── NguoiDung.java
+│   │   │               │   │   ├── SanPham.java
+│   │   │               │   │   ├── TrangThaiDonHang.java
+│   │   │               │   │   └── VaiTro.java
+│   │   │               │   └── repository
+│   │   │               │       ├── DonHangChiTietRepository.java
+│   │   │               │       ├── DonHangRepository.java
+│   │   │               │       ├── DonKinhRepository.java
+│   │   │               │       ├── NguoiDungRepository.java
+│   │   │               │       └── SanPhamRepository.java
+│   │   │               ├── infrastructure
+│   │   │               │   └── persistence
+│   │   │               │       ├── adapter
+│   │   │               │       │   ├── DonHangChiTietRepositoryAdapter.java
+│   │   │               │       │   ├── DonHangRepositoryAdapter.java
+│   │   │               │       │   ├── DonKinhRepositoryAdapter.java
+│   │   │               │       │   ├── NguoiDungRepositoryAdapter.java
+│   │   │               │       │   └── SanPhamRepositoryAdapter.java
+│   │   │               │       ├── config
+│   │   │               │       │   └── DatabaseSchemaUpdater.java
+│   │   │               │       ├── converter
+│   │   │               │       │   ├── LoaiSanPhamConverter.java
+│   │   │               │       │   ├── TrangThaiDonHangConverter.java
+│   │   │               │       │   └── VaiTroConverter.java
+│   │   │               │       ├── entity
+│   │   │               │       │   ├── DonHangChiTietEntity.java
+│   │   │               │       │   ├── DonHangEntity.java
+│   │   │               │       │   ├── DonKinhEntity.java
+│   │   │               │       │   ├── NguoiDungEntity.java
+│   │   │               │       │   └── SanPhamEntity.java
+│   │   │               │       ├── mapper
+│   │   │               │       │   ├── DonHangChiTietEntityMapper.java
+│   │   │               │       │   ├── DonHangEntityMapper.java
+│   │   │               │       │   ├── DonKinhEntityMapper.java
+│   │   │               │       │   ├── NguoiDungEntityMapper.java
+│   │   │               │       │   └── SanPhamEntityMapper.java
+│   │   │               │       └── repository
+│   │   │               │           ├── DonHangChiTietJpaRepository.java
+│   │   │               │           ├── DonHangJpaRepository.java
+│   │   │               │           ├── DonKinhJpaRepository.java
+│   │   │               │           ├── NguoiDungJpaRepository.java
+│   │   │               │           └── SanPhamJpaRepository.java
+│   │   │               ├── interfaces
+│   │   │               │   └── rest
+│   │   │               │       ├── DonHangChiTietController.java
+│   │   │               │       ├── DonHangController.java
+│   │   │               │       ├── DonKinhController.java
+│   │   │               │       ├── NguoiDungController.java
+│   │   │               │       └── SanPhamController.java
+│   │   │               └── Main.java
+│   │   └── resources
+│   │       ├── static
+│   │       ├── templates
+│   │       └── application.properties
+│   └── test
+│       └── java
+│           └── com
+│               └── bankinh
+│                   └── backend
+│                       └── BackendApplicationTests.java
+├── .gitattributes
 ├── .gitignore
-└── readme.md
+├── codesql.txt
+├── mvnw
+├── mvnw.cmd
+└── pom.xml
+```
+# Cấu trúc thư mục FE
+```
+├── public
+│   ├── favicon.svg
+│   └── icons.svg
+├── src
+│   ├── api
+│   │   ├── axios.js
+│   │   ├── donHang.js
+│   │   ├── donHangChiTiet.js
+│   │   ├── donKinh.js
+│   │   ├── nguoiDung.js
+│   │   └── sanPham.js
+│   ├── assets
+│   │   ├── hero.png
+│   │   ├── react.svg
+│   │   └── vite.svg
+│   ├── components
+│   │   ├── admin
+│   │   │   ├── AdminLayout.jsx
+│   │   │   └── ProtectedAdminRoute.jsx
+│   │   ├── staff
+│   │   │   ├── ProtectedStaffRoute.jsx
+│   │   │   └── StaffLayout.jsx
+│   │   ├── Header.jsx
+│   │   ├── Pagination.jsx
+│   │   └── ProductCard.jsx
+│   ├── context
+│   │   ├── AuthContext.jsx
+│   │   └── CartContext.jsx
+│   ├── pages
+│   │   ├── admin
+│   │   │   ├── AdminDashboard.jsx
+│   │   │   ├── AdminDoanhThuPage.jsx
+│   │   │   ├── AdminDonHangPage.jsx
+│   │   │   ├── AdminKhachHangPage.jsx
+│   │   │   ├── AdminNhanVienPage.jsx
+│   │   │   └── AdminSanPhamPage.jsx
+│   │   ├── staff
+│   │   │   ├── StaffDonHangPage.jsx
+│   │   │   ├── StaffKhachHangPage.jsx
+│   │   │   └── StaffSanPhamPage.jsx
+│   │   ├── CartPage.jsx
+│   │   ├── CheckoutPage.jsx
+│   │   ├── HomePage.jsx
+│   │   ├── LoginPage.jsx
+│   │   ├── OrderDetailPage.jsx
+│   │   ├── OrdersPage.jsx
+│   │   ├── ProductDetailPage.jsx
+│   │   └── RegisterPage.jsx
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── .gitignore
+├── README.md
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+└── vite.config.js
 ```
