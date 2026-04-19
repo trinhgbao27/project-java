@@ -1,0 +1,166 @@
+create extension if not exists pgcrypto;
+-- =====================
+-- ENUMS
+-- =====================
+create type vai_tro_enum as enum ('khachhang', 'nhanvien', 'quanly');
+create type loai_sanpham_enum as enum ('gong', 'trong', 'phukien');
+create type trang_thai_donhang_enum as enum (
+  'cho_thanh_toan',
+  'cho_xac_nhan',
+  'dang_xu_ly',
+  'dang_giao',
+  'hoan_thanh',
+  'da_huy'
+);
+
+-- =====================
+-- TABLES
+-- =====================
+
+create table nguoidung (
+  id uuid primary key default gen_random_uuid(),
+  email varchar(255) not null unique,
+  ho_ten varchar(100) not null,
+  vai_tro vai_tro_enum not null default 'khachhang',
+  tao_luc timestamptz not null default now(),
+  cap_nhat_luc timestamptz not null default now()
+);
+
+create table sanpham (
+  id uuid primary key default gen_random_uuid(),
+  ten varchar(255) not null,
+  loai loai_sanpham_enum not null,
+  gia decimal(12, 2) not null check (gia >= 0),
+  so_luong_ton int not null default 0 check (so_luong_ton >= 0),
+  hinh_anh_a text,
+  hinh_anh_b text,
+  tao_luc timestamptz not null default now(),
+  cap_nhat_luc timestamptz not null default now()
+);
+
+create table don_kinh (
+  id uuid primary key default gen_random_uuid(),
+  nguoidung_id uuid not null references nguoidung (id) on delete cascade,
+  od_cau decimal(5, 2),
+  os_cau decimal(5, 2),
+  khoang_dong_tu decimal(5, 2),
+  file_url text,
+  ghi_chu text,
+  tao_luc timestamptz not null default now(),
+  cap_nhat_luc timestamptz not null default now()
+);
+
+create table donhang (
+  id uuid primary key default gen_random_uuid(),
+  nguoidung_id uuid not null references nguoidung (id) on delete restrict,
+  trang_thai trang_thai_donhang_enum not null default 'cho_thanh_toan',
+  tong_tien decimal(12, 2) not null default 0 check (tong_tien >= 0),
+  tao_luc timestamptz not null default now(),
+  cap_nhat_luc timestamptz not null default now()
+);
+
+create table donhang_chitiet (
+  id uuid primary key default gen_random_uuid(),
+  donhang_id uuid not null references donhang (id) on delete cascade,
+  sanpham_id uuid not null references sanpham (id) on delete restrict,
+  don_kinh_id uuid references don_kinh (id) on delete set null,
+  so_luong int not null check (so_luong > 0),
+  gia_ban decimal(12, 2) not null check (gia_ban >= 0),
+  tao_luc timestamptz not null default now()
+);
+
+-- =====================
+-- INDEXES
+-- =====================
+
+create index on donhang (nguoidung_id);
+create index on donhang (trang_thai);
+create index on don_kinh (nguoidung_id);
+create index on donhang_chitiet (donhang_id);
+create index on donhang_chitiet (sanpham_id);
+
+-- =====================
+-- AUTO UPDATE cap_nhat_luc
+-- =====================
+
+create or replace function set_cap_nhat_luc()
+returns trigger as $$
+begin
+  new.cap_nhat_luc = now();
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_nguoidung_cap_nhat
+  before update on nguoidung
+  for each row execute function set_cap_nhat_luc();
+
+create trigger trg_sanpham_cap_nhat
+  before update on sanpham
+  for each row execute function set_cap_nhat_luc();
+
+create trigger trg_don_kinh_cap_nhat
+  before update on don_kinh
+  for each row execute function set_cap_nhat_luc();
+
+create trigger trg_donhang_cap_nhat
+  before update on donhang
+  for each row execute function set_cap_nhat_luc();
+
+-- =====================
+-- ROW LEVEL SECURITY
+-- =====================
+
+alter table nguoidung enable row level security;
+alter table sanpham enable row level security;
+alter table don_kinh enable row level security;
+alter table donhang enable row level security;
+alter table donhang_chitiet enable row level security;
+
+-- khachhang chi xem duoc du lieu cua chinh minh
+create policy "nguoidung: chinh minh" on nguoidung
+  for all using (auth.uid() = id);
+
+create policy "don_kinh: chinh minh" on don_kinh
+  for all using (auth.uid() = nguoidung_id);
+
+create policy "donhang: chinh minh" on donhang
+  for all using (auth.uid() = nguoidung_id);
+
+create policy "donhang_chitiet: qua donhang" on donhang_chitiet
+  for all using (
+    exists (
+      select 1 from donhang
+      where donhang.id = donhang_chitiet.donhang_id
+        and donhang.nguoidung_id = auth.uid()
+    )
+  );
+
+-- sanpham ai cung doc duoc
+create policy "sanpham: public read" on sanpham
+  for select using (true);
+------------------------------------------------
+ALTER TYPE trang_thai_donhang_enum ADD VALUE 'yeu_cau_hoan_tra';
+ALTER TABLE donhang ADD COLUMN ho_ten_nguoi_nhan varchar(100);
+ALTER TABLE donhang ADD COLUMN so_dien_thoai varchar(20);
+ALTER TABLE donhang ADD COLUMN dia_chi text;
+-------------------------------------------------------------
+ALTER TYPE trang_thai_donhang_enum ADD VALUE 'cho_duyet_tra_hang';
+ALTER TYPE trang_thai_donhang_enum ADD VALUE 'dang_hoan_hang';
+ALTER TYPE trang_thai_donhang_enum ADD VALUE 'da_tra_hang_hoan_tien';
+ALTER TABLE donhang ADD COLUMN ly_do_hoan_tra text;
+ALTER TABLE donhang ADD COLUMN ten_ngan_hang varchar(100);
+ALTER TABLE donhang ADD COLUMN so_tai_khoan varchar(50);
+ALTER TABLE donhang ADD COLUMN ten_chu_tai_khoan varchar(100);
+
+-------------------------------------------------------------
+-- PATCH THEM DE SUA LOI TU CHOI HOAN TRA (SAFE CHO SUPABASE)
+-------------------------------------------------------------
+ALTER TYPE trang_thai_donhang_enum ADD VALUE IF NOT EXISTS 'tu_choi_hoan_tra';
+ALTER TABLE donhang ADD COLUMN IF NOT EXISTS ly_do_tu_choi text;
+
+-------------------------------------------------------------
+-- PATCH THEM DE THEM ANH SAN PHAM (TOI DA 2 ANH)
+-------------------------------------------------------------
+ALTER TABLE sanpham ADD COLUMN IF NOT EXISTS hinh_anh_a text;
+ALTER TABLE sanpham ADD COLUMN IF NOT EXISTS hinh_anh_b text;
