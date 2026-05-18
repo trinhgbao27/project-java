@@ -4,19 +4,20 @@ import api from '../../api/axios'
 import { getChiTietByDonHang } from '../../api/donHangChiTiet'
 import { getSanPhamById } from '../../api/sanPham'
 import { tuChoiHoanTra } from '../../api/donHang'
+import { getDonKinhById } from '../../api/donKinh'
 
 const trangThaiOptions = [
   { value: 'cho_thanh_toan',        label: 'Chờ thanh toán',      color: 'bg-amber-100 text-amber-700' },
-  { value: 'cho_xac_nhan',          label: 'Chờ xác nhận',       color: 'bg-blue-100 text-blue-700' },
-  { value: 'dang_xu_ly',            label: 'Đang xử lý',          color: 'bg-indigo-100 text-indigo-700' },
-  { value: 'dang_giao',             label: 'Đang giao',            color: 'bg-purple-100 text-purple-700' },
-  { value: 'hoan_thanh',            label: 'Hoàn thành',           color: 'bg-green-100 text-green-700' },
-  { value: 'da_huy',                label: 'Đã hủy',               color: 'bg-red-100 text-red-700' },
-  { value: 'yeu_cau_hoan_tra',      label: 'Yêu cầu hoàn trả',    color: 'bg-orange-100 text-orange-700' },
-  { value: 'cho_duyet_tra_hang',    label: 'Chờ duyệt trả hàng',  color: 'bg-yellow-100 text-yellow-700' },
-  { value: 'dang_hoan_hang',        label: 'Đang hoàn hàng',       color: 'bg-pink-100 text-pink-700' },
-  { value: 'da_tra_hang_hoan_tien', label: 'Đã hoàn tiền',         color: 'bg-teal-100 text-teal-700' },
-  { value: 'tu_choi_hoan_tra',      label: 'Từ chối hoàn trả',     color: 'bg-gray-100 text-gray-600' },
+  { value: 'cho_xac_nhan',          label: 'Chờ xác nhận',        color: 'bg-blue-100 text-blue-700' },
+  { value: 'dang_xu_ly',            label: 'Đang xử lý',           color: 'bg-indigo-100 text-indigo-700' },
+  { value: 'dang_giao',             label: 'Đang giao',             color: 'bg-purple-100 text-purple-700' },
+  { value: 'hoan_thanh',            label: 'Hoàn thành',            color: 'bg-green-100 text-green-700' },
+  { value: 'da_huy',                label: 'Đã hủy',                color: 'bg-red-100 text-red-700' },
+  { value: 'yeu_cau_hoan_tra',      label: 'Yêu cầu hoàn trả',     color: 'bg-orange-100 text-orange-700' },
+  { value: 'cho_duyet_tra_hang',    label: 'Chờ duyệt trả hàng',   color: 'bg-yellow-100 text-yellow-700' },
+  { value: 'dang_hoan_hang',        label: 'Đang hoàn hàng',        color: 'bg-pink-100 text-pink-700' },
+  { value: 'da_tra_hang_hoan_tien', label: 'Đã hoàn tiền',          color: 'bg-teal-100 text-teal-700' },
+  { value: 'tu_choi_hoan_tra',      label: 'Từ chối hoàn trả',      color: 'bg-gray-100 text-gray-600' },
 ]
 
 const buocTiepTheo = {
@@ -26,12 +27,51 @@ const buocTiepTheo = {
   dang_giao:             ['hoan_thanh'],
   hoan_thanh:            [],
   da_huy:                [],
-  // yeu_cau_hoan_tra xử lý riêng bằng 2 nút
   yeu_cau_hoan_tra:      [],
   cho_duyet_tra_hang:    ['dang_hoan_hang'],
   dang_hoan_hang:        ['da_tra_hang_hoan_tien'],
   da_tra_hang_hoan_tien: [],
   tu_choi_hoan_tra:      [],
+}
+
+// Component hiển thị thông số prescription
+function PrescriptionCard({ donKinh }) {
+  if (!donKinh) return null
+
+  const rows = [
+    { label: 'OD (Mắt phải)', value: donKinh.odCau != null ? `${donKinh.odCau > 0 ? '+' : ''}${donKinh.odCau} Diop` : null },
+    { label: 'OS (Mắt trái)',  value: donKinh.osCau  != null ? `${donKinh.osCau  > 0 ? '+' : ''}${donKinh.osCau}  Diop` : null },
+    { label: 'PD (Khoảng đồng tử)', value: donKinh.khoangDongTu != null ? `${donKinh.khoangDongTu} mm` : null },
+    { label: 'Ghi chú',        value: donKinh.ghiChu || null },
+  ].filter(r => r.value)
+
+  if (rows.length === 0) return null
+
+  return (
+    <div className="mt-2 bg-blue-50 border border-blue-100 rounded-xl p-3">
+      <p className="text-xs font-semibold text-blue-700 mb-2 flex items-center gap-1">
+        🔬 Thông số đơn kính
+      </p>
+      <div className="flex flex-col gap-1">
+        {rows.map(r => (
+          <div key={r.label} className="flex gap-2 text-xs">
+            <span className="text-gray-400 w-36 shrink-0">{r.label}</span>
+            <span className="font-semibold text-gray-800">{r.value}</span>
+          </div>
+        ))}
+      </div>
+      {donKinh.fileUrl && (
+        <a
+          href={donKinh.fileUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2 inline-flex items-center gap-1 text-xs text-blue-600 hover:underline"
+        >
+          📎 Xem file đơn kính
+        </a>
+      )}
+    </div>
+  )
 }
 
 export default function AdminDonHangPage() {
@@ -62,10 +102,23 @@ export default function AdminDonHangPage() {
       const orderRes = await api.get(`/don-hang/${order.id}`)
       setSelectedOrder(orderRes.data)
       const res = await getChiTietByDonHang(order.id)
+
       const items = await Promise.all(
         res.data.map(async item => {
           const spRes = await getSanPhamById(item.sanPhamId)
-          return { ...item, sanPham: spRes.data }
+          let donKinh = null
+
+          // Nếu item có donKinhId → lấy thông số prescription
+          if (item.donKinhId) {
+            try {
+              const dkRes = await getDonKinhById(item.donKinhId)
+              donKinh = dkRes.data
+            } catch {
+              // Không tìm được đơn kính, bỏ qua
+            }
+          }
+
+          return { ...item, sanPham: spRes.data, donKinh }
         })
       )
       setOrderItems(items)
@@ -114,6 +167,9 @@ export default function AdminDonHangPage() {
     return matchTrangThai && matchCode
   })
   const nextSteps = selectedOrder ? (buocTiepTheo[selectedOrder?.trangThai] ?? []) : []
+
+  // Kiểm tra đơn có tròng kính prescription không
+  const hasPrescription = orderItems.some(item => item.donKinh)
 
   return (
     <StaffLayout>
@@ -188,9 +244,17 @@ export default function AdminDonHangPage() {
                   <p className="font-mono font-bold text-gray-800">#{selectedOrder.id.slice(0, 8).toUpperCase()}</p>
                   <p className="text-xs text-gray-400 mt-1">{new Date(selectedOrder.taoLuc).toLocaleString('vi-VN')}</p>
                 </div>
-                <span className={`text-xs font-medium px-3 py-1 rounded-full ${getTrangThai(selectedOrder.trangThai).color}`}>
-                  {getTrangThai(selectedOrder.trangThai).label}
-                </span>
+                <div className="flex flex-col items-end gap-1">
+                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${getTrangThai(selectedOrder.trangThai).color}`}>
+                    {getTrangThai(selectedOrder.trangThai).label}
+                  </span>
+                  {/* Badge đơn kính nếu có prescription */}
+                  {hasPrescription && (
+                    <span className="text-xs font-medium px-3 py-1 rounded-full bg-blue-100 text-blue-700">
+                      🔬 Đơn kính
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* Khách hàng */}
@@ -214,7 +278,7 @@ export default function AdminDonHangPage() {
                 </div>
               )}
 
-              {/* Thông tin hoàn trả của khách */}
+              {/* Thông tin hoàn trả */}
               {selectedOrder.lyDoHoanTra && (
                 <div className="bg-orange-50 rounded-xl p-3 mb-3 border border-orange-100">
                   <p className="text-xs text-orange-600 font-medium mb-2">Yêu cầu hoàn trả của khách</p>
@@ -227,7 +291,7 @@ export default function AdminDonHangPage() {
                 </div>
               )}
 
-              {/* Lý do từ chối nếu có */}
+              {/* Lý do từ chối */}
               {selectedOrder.lyDoTuChoi && (
                 <div className="bg-gray-100 rounded-xl p-3 mb-3 border border-gray-200">
                   <p className="text-xs text-gray-500 font-medium mb-1">Lý do từ chối</p>
@@ -238,8 +302,6 @@ export default function AdminDonHangPage() {
               {/* Cập nhật trạng thái */}
               <div className="mb-4">
                 <p className="text-xs text-gray-500 mb-2 font-medium">Cập nhật trạng thái</p>
-
-                {/* Luồng đặc biệt: yeu_cau_hoan_tra — 2 nút */}
                 {selectedOrder.trangThai === 'yeu_cau_hoan_tra' ? (
                   <div className="flex gap-2">
                     <button
@@ -278,17 +340,22 @@ export default function AdminDonHangPage() {
               <div className="border-t border-gray-100 pt-4">
                 <p className="text-xs text-gray-500 mb-3 font-medium">Sản phẩm trong đơn</p>
                 {loadingItems ? <p className="text-center text-gray-400 text-sm py-4">Đang tải...</p> : (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-3">
                     {orderItems.map(item => (
-                      <div key={item.id} className="flex justify-between items-center text-sm">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">👓</span>
-                          <div>
-                            <p className="font-medium text-gray-800">{item.sanPham?.ten}</p>
-                            <p className="text-xs text-gray-400">x{item.soLuong}</p>
+                      <div key={item.id}>
+                        <div className="flex justify-between items-center text-sm">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">👓</span>
+                            <div>
+                              <p className="font-medium text-gray-800">{item.sanPham?.ten}</p>
+                              <p className="text-xs text-gray-400">x{item.soLuong}</p>
+                            </div>
                           </div>
+                          <p className="font-bold text-gray-700">{(item.giaBan * item.soLuong).toLocaleString('vi-VN')}₫</p>
                         </div>
-                        <p className="font-bold text-gray-700">{(item.giaBan * item.soLuong).toLocaleString('vi-VN')}₫</p>
+
+                        {/* Hiển thị thông số prescription nếu có */}
+                        <PrescriptionCard donKinh={item.donKinh} />
                       </div>
                     ))}
                   </div>
