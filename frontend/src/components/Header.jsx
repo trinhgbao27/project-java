@@ -51,9 +51,23 @@ export default function Header() {
                 </button>
               )}
 
-              <span className="text-gray-700 text-sm">
-                Xin chào, <span className="font-semibold text-blue-600">{user.hoTen.split(' ').pop()}</span>
-              </span>
+              {/* Link tài khoản — chỉ hiện với khách hàng */}
+              {user.vaiTro === 'khachhang' && (
+                <button
+                  onClick={() => navigate('/tai-khoan')}
+                  className="text-sm text-gray-700 hover:text-blue-600 transition font-semibold"
+                >
+                  👤 {user.hoTen.split(' ').pop()}
+                </button>
+              )}
+
+              {/* Tên hiển thị cho admin/nhân viên (không có link profile) */}
+              {user.vaiTro !== 'khachhang' && (
+                <span className="text-gray-700 text-sm">
+                  Xin chào, <span className="font-semibold text-blue-600">{user.hoTen.split(' ').pop()}</span>
+                </span>
+              )}
+
               <button
                 onClick={() => { logout(); navigate('/') }}
                 className="text-xs text-gray-400 hover:text-red-500 transition border border-gray-200 px-3 py-1.5 rounded-full"

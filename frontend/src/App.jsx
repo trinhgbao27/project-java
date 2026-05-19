@@ -12,6 +12,7 @@ import OrdersPage from './pages/OrdersPage'
 import OrderDetailPage from './pages/OrderDetailPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import ProfilePage from './pages/ProfilePage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminSanPhamPage from './pages/admin/AdminSanPhamPage'
 import AdminDonHangPage from './pages/admin/AdminDonHangPage'
@@ -57,6 +58,7 @@ function App() {
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/don-hang" element={<OrdersPage />} />
                     <Route path="/don-hang/:id" element={<OrderDetailPage />} />
+                    <Route path="/tai-khoan" element={<ProfilePage />} />
                   </Routes>
                 </main>
               </>
