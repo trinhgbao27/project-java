@@ -50,4 +50,7 @@ public class SanPhamEntity {
     @UpdateTimestamp
     @Column(name = "cap_nhat_luc", nullable = false)
     private OffsetDateTime capNhatLuc;
+
+    @Column(name = "mo_ta")
+    private String moTa;
 }

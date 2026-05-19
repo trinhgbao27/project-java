@@ -46,6 +46,7 @@ public class SanPhamService {
         existing.setLoai(request.getLoai());
         existing.setGia(request.getGia());
         existing.setSoLuongTon(request.getSoLuongTon());
+        existing.setMoTa(request.getMoTa());
         if (request.getHinhAnhA() != null) {
             existing.setHinhAnhA(request.getHinhAnhA());
         }

@@ -13,6 +13,8 @@ public class SanPhamRequest {
     @NotBlank
     private String ten;
 
+    private String moTa;
+
     @NotNull
     private LoaiSanPham loai;
 
@@ -29,6 +31,9 @@ public class SanPhamRequest {
 
     public String getTen() { return ten; }
     public void setTen(String ten) { this.ten = ten; }
+
+    public String getMoTa() { return moTa; }
+    public void setMoTa(String moTa) { this.moTa = moTa; }
 
     public LoaiSanPham getLoai() { return loai; }
     public void setLoai(LoaiSanPham loai) { this.loai = loai; }

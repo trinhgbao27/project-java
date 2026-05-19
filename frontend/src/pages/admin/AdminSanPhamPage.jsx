@@ -15,7 +15,7 @@ const loaiColor = {
   phukien: 'bg-purple-100 text-purple-700',
 }
 
-const emptyForm = { ten: '', loai: 'gong', gia: '', soLuongTon: '' }
+const emptyForm = { ten: '', moTa: '', loai: 'gong', gia: '', soLuongTon: '' }
 
 export default function AdminSanPhamPage() {
   const [products, setProducts] = useState([])
@@ -52,6 +52,7 @@ export default function AdminSanPhamPage() {
     setEditingId(product.id)
     setForm({
       ten: product.ten,
+      moTa: product.moTa || '',
       loai: product.loai,
       gia: String(product.gia),
       soLuongTon: String(product.soLuongTon),
@@ -70,6 +71,7 @@ export default function AdminSanPhamPage() {
     try {
       const payload = {
         ten: form.ten,
+        moTa: form.moTa,
         loai: form.loai,
         gia: parseFloat(form.gia),
         soLuongTon: parseInt(form.soLuongTon),
@@ -127,6 +129,7 @@ export default function AdminSanPhamPage() {
     try {
       await api.put(`/san-pham/${imageProduct.id}`, {
         ten: imageProduct.ten,
+        moTa: imageProduct.moTa,
         loai: imageProduct.loai,
         gia: imageProduct.gia,
         soLuongTon: imageProduct.soLuongTon,
@@ -178,6 +181,7 @@ export default function AdminSanPhamPage() {
             <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
               <tr>
                 <th className="px-5 py-3 text-left">Tên sản phẩm</th>
+                <th className="px-5 py-3 text-left">Mô tả</th>
                 <th className="px-5 py-3 text-left">Loại</th>
                 <th className="px-5 py-3 text-right">Giá</th>
                 <th className="px-5 py-3 text-right">Tồn kho</th>
@@ -246,6 +250,16 @@ export default function AdminSanPhamPage() {
                   onChange={e => setForm(p => ({ ...p, ten: e.target.value }))}
                   placeholder="Gọng kính titan..."
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Mô tả</label>
+                <textarea
+                  value={form.moTa}
+                  onChange={e => setForm(p => ({ ...p, moTa: e.target.value }))}
+                  placeholder="Mô tả sản phẩm..."
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  rows={3}
                 />
               </div>
               <div>

@@ -21,4 +21,5 @@ public class SanPham {
     private String hinhAnhB;
     private OffsetDateTime taoLuc;
     private OffsetDateTime capNhatLuc;
+    private String moTa;
 }
