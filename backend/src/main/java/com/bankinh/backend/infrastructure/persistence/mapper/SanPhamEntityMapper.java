@@ -19,7 +19,9 @@ public class SanPhamEntityMapper {
                 entity.getHinhAnhA(),
                 entity.getHinhAnhB(),
                 entity.getTaoLuc(),
-                entity.getCapNhatLuc()
+                entity.getCapNhatLuc(),
+                entity.getMoTa()
+
         );
     }
 
@@ -32,6 +34,7 @@ public class SanPhamEntityMapper {
         entity.setSoLuongTon(domain.getSoLuongTon());
         entity.setHinhAnhA(domain.getHinhAnhA());
         entity.setHinhAnhB(domain.getHinhAnhB());
+        entity.setMoTa(domain.getMoTa());
         return entity;
     }
 }

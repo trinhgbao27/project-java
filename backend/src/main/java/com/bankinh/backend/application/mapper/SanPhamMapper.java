@@ -18,7 +18,8 @@ public class SanPhamMapper {
                 sanPham.getHinhAnhA(),
                 sanPham.getHinhAnhB(),
                 sanPham.getTaoLuc(),
-                sanPham.getCapNhatLuc()
+                sanPham.getCapNhatLuc(),
+                sanPham.getMoTa()
         );
     }
 
@@ -30,6 +31,7 @@ public class SanPhamMapper {
         sanPham.setSoLuongTon(request.getSoLuongTon());
         sanPham.setHinhAnhA(request.getHinhAnhA());
         sanPham.setHinhAnhB(request.getHinhAnhB());
+        sanPham.setMoTa(request.getMoTa());
         return sanPham;
     }
 }

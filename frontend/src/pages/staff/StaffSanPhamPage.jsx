@@ -15,7 +15,7 @@ const loaiColor = {
   phukien: 'bg-purple-100 text-purple-700',
 }
 
-const emptyForm = { ten: '', loai: 'gong', gia: '', soLuongTon: '' }
+const emptyForm = { ten: '', moTa: '', loai: 'gong', gia: '', soLuongTon: '' }
 
 export default function StaffSanPhamPage() {
   const [products, setProducts] = useState([])
@@ -52,6 +52,7 @@ export default function StaffSanPhamPage() {
     setEditingId(product.id)
     setForm({
       ten: product.ten,
+      moTa: product.moTa || '',
       loai: product.loai,
       gia: String(product.gia),
       soLuongTon: String(product.soLuongTon),
@@ -70,6 +71,7 @@ export default function StaffSanPhamPage() {
     try {
       const payload = {
         ten: form.ten,
+        moTa: form.moTa,
         loai: form.loai,
         gia: parseFloat(form.gia),
         soLuongTon: parseInt(form.soLuongTon),
@@ -127,6 +129,7 @@ export default function StaffSanPhamPage() {
     try {
       await api.put(`/san-pham/${imageProduct.id}`, {
         ten: imageProduct.ten,
+        moTa: imageProduct.moTa || '',
         loai: imageProduct.loai,
         gia: imageProduct.gia,
         soLuongTon: imageProduct.soLuongTon,
@@ -178,6 +181,7 @@ export default function StaffSanPhamPage() {
             <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
               <tr>
                 <th className="px-5 py-3 text-left">Tên sản phẩm</th>
+                <th className="px-5 py-3 text-left">Mô tả</th>
                 <th className="px-5 py-3 text-left">Loại</th>
                 <th className="px-5 py-3 text-right">Giá</th>
                 <th className="px-5 py-3 text-right">Tồn kho</th>
@@ -186,10 +190,11 @@ export default function StaffSanPhamPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filtered.length === 0 ? (
-                <tr><td colSpan={5} className="text-center py-12 text-gray-400">Không có sản phẩm</td></tr>
+                <tr><td colSpan={6} className="text-center py-12 text-gray-400">Không có sản phẩm</td></tr>
               ) : filtered.map(p => (
                 <tr key={p.id} className="hover:bg-gray-50 transition">
                   <td className="px-5 py-3.5 font-medium text-gray-800">{p.ten}</td>
+                  <td className="px-5 py-3.5">{p.moTa}</td>
                   <td className="px-5 py-3.5">
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${loaiColor[p.loai]}`}>
                       {loaiOptions.find(o => o.value === p.loai)?.label}
@@ -223,6 +228,16 @@ export default function StaffSanPhamPage() {
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">Tên sản phẩm</label>
                 <input value={form.ten} onChange={e => setForm(p => ({ ...p, ten: e.target.value }))} placeholder="Gọng kính titan..." className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 mb-1 block">Mô tả</label>
+                <textarea
+                  value={form.moTa}
+                  onChange={e => setForm(p => ({ ...p, moTa: e.target.value }))}
+                  placeholder="Mô tả sản phẩm..."
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  rows={3}
+                />
               </div>
               <div>
                 <label className="text-sm text-gray-600 mb-1 block">Loại</label>

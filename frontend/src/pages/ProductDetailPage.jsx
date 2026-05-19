@@ -65,6 +65,9 @@ export default function ProductDetailPage() {
                 {product.gia.toLocaleString('vi-VN')}₫
               </p>
               <p className="mt-2 text-sm text-gray-500">
+                {product.moTa}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
                 Còn lại: <span className="font-medium text-gray-700">{product.soLuongTon} sản phẩm</span>
               </p>
             </div>
