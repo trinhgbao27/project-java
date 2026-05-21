@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface NguoiDungJpaRepository extends JpaRepository<NguoiDungEntity, UUID> {
     boolean existsByEmail(String email);
+    Optional<NguoiDungEntity> findByEmail(String email);
 }
