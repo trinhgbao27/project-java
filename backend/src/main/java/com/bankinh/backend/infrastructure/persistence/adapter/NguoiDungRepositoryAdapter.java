@@ -51,6 +51,7 @@ public class NguoiDungRepositoryAdapter implements NguoiDungRepository {
 
     @Override
     public Optional<NguoiDung> findByEmail(String email) {
-        return nguoiDungJpaRepository.findByEmail(email)
-                .map(nguoiDungEntityMapper::toDomain);
+        return jpaRepository.findByEmail(email)
+                .map(entityMapper::toDomain);
+    }
 }
