@@ -48,4 +48,10 @@ public class NguoiDungRepositoryAdapter implements NguoiDungRepository {
     public boolean existsByEmail(String email) {
         return jpaRepository.existsByEmail(email);
     }
+
+    @Override
+    public Optional<NguoiDung> findByEmail(String email) {
+        return jpaRepository.findByEmail(email)
+                .map(entityMapper::toDomain);
+    }
 }

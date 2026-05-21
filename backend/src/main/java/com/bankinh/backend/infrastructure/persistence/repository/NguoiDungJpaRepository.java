@@ -1,4 +1,6 @@
 package com.bankinh.backend.infrastructure.persistence.repository;
+import java.util.Optional;
+
 
 import com.bankinh.backend.infrastructure.persistence.entity.NguoiDungEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,4 +9,6 @@ import java.util.UUID;
 
 public interface NguoiDungJpaRepository extends JpaRepository<NguoiDungEntity, UUID> {
     boolean existsByEmail(String email);
+    Optional<NguoiDungEntity> findByEmail(String email);
+
 }

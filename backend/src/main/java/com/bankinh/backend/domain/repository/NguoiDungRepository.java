@@ -13,4 +13,5 @@ public interface NguoiDungRepository {
     void deleteById(UUID id);
     boolean existsById(UUID id);
     boolean existsByEmail(String email);
+    Optional<NguoiDung> findByEmail(String email);
 }
