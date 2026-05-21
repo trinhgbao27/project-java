@@ -8,15 +8,16 @@ export function AuthProvider({ children }) {
     return saved ? JSON.parse(saved) : null
   })
 
-  const login = (userData) => {
+  const login = (token, userData) => {
     setUser(userData)
     localStorage.setItem('user', JSON.stringify(userData))
-    localStorage.setItem('nguoiDungId', userData.id)
+    localStorage.setItem('token', token)        // ← thêm dòng này
   }
 
   const logout = () => {
     setUser(null)
     localStorage.removeItem('user')
+    localStorage.removeItem('token')            // ← thêm dòng này
     localStorage.removeItem('nguoiDungId')
   }
 
